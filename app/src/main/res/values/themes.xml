@@ -1,0 +1,26 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.RecipeManager" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:spinnerItemStyle">@style/DefaultTextStyle</item>
+        <item name="android:spinnerDropDownItemStyle">@style/DefaultTextStyle</item>
+        <!-- Ajouter d'autres styles si nécessaire -->
+    </style>
+
+    <style name="Theme.RecipeManager" parent="Base.Theme.RecipeManager" />
+
+    <!-- Crée le composant pour le texte par défaut -->
+    <style name="DefaultTextStyle">
+        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- Crée le composant pour le sous-titre par défaut -->
+    <style name="SubtitleTextStyle" parent="DefaultTextStyle">
+        <item name="android:textColor">@color/darkGray</item>
+    </style>
+
+    <!-- Crée le composant pour le titre par défaut -->
+    <style name="TitleTextStyle" parent="SubtitleTextStyle">
+        <item name="android:textSize">24sp</item>
+    </style>
+</resources>

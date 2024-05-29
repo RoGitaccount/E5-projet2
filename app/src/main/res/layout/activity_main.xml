@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="#f2f2f2"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="25sp"
+        app:cardElevation="50sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:gravity="center"
+            android:text="Connexion"
+            android:textColor="@color/black"
+            android:textSize="35sp"></TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connexion à RecipeManager"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:textSize="19dp"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp">
+        </TextView>
+
+
+            <!--affichage des erreurs de l'api tels que mauvais mdp
+             et recommandation-->
+        <TextView
+            android:id="@+id/errorConnectAccountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="error"
+            android:textColor="#ff0000"
+            android:layout_gravity="center"
+            android:textSize="@dimen/default_margin"
+            android:layout_marginTop="15dp"
+            android:visibility="gone">
+        </TextView>
+
+            <!--Edit Text st les champs de saisie-->
+
+        <EditText
+            android:id="@+id/EmailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/edittext_background"
+            android:hint="Email ..."
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:padding="10dp">
+        </EditText>
+
+            <EditText
+                android:id="@+id/PasswordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="35dp"
+                android:background="@drawable/edittext_background"
+                android:hint="Mot de passe ..."
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:inputType="textPassword" />
+
+
+            <TextView
+                android:id="@+id/createAccountBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Crée un nouveau Compte"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="18dp">
+            </TextView>
+
+            <Button
+            android:id="@+id/connectBtn"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#6bb7be"
+            android:text="Se connecter"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            app:cornerRadius="0dp" />
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
