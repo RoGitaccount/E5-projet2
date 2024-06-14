@@ -93,7 +93,7 @@ class AddRecipeActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.home_page -> {
                     // Retourner à l'activité Acceuil
-                    val intent = Intent(this, Acceuil::class.java)
+                    val intent = Intent(this, Accueil::class.java)
                     intent.putExtra("id_utilisateur", id_utilisateur)
                     startActivity(intent)
                     true
@@ -108,12 +108,13 @@ class AddRecipeActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                //R.id.fav_page -> {
-                //  // Navigate to favorites page
-                //val intent = Intent(this, FavoritesActivity::class.java)
-                //startActivity(intent)
-                //true
-                //}
+                R.id.fav_page -> {
+                    // Navigate to favorites page
+                    val intent = Intent(this, FavoritesActivity::class.java)
+                    intent.putExtra("id_utilisateur", id_utilisateur)
+                    startActivity(intent)
+                    true
+                }
 
                 else -> false
             }

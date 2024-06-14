@@ -21,6 +21,8 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
             android:src="@drawable/img_defaut">
 
         </ImageView>
@@ -36,11 +38,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></View>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/Titre_recette"
         android:layout_width="230dp"
+        android:textSize="18dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="Titre de la recette"
@@ -55,6 +58,7 @@
         android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:text="publié le :"
+        android:textSize="15dp"
         android:textColor="@color/lightGray"
         app:layout_constraintStart_toStartOf="@+id/Titre_recette"
         app:layout_constraintTop_toBottomOf="@+id/Titre_recette" />
@@ -64,6 +68,7 @@
         android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:text="par :"
+        android:textSize="15dp"
         android:textColor="@color/lightGray"
         app:layout_constraintStart_toStartOf="@+id/Titre_recette"
         app:layout_constraintTop_toBottomOf="@+id/publication" />
@@ -74,6 +79,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginRight="20dp"
+        app:tint="@color/dorée"
         android:src="@drawable/ic_unstar"
         app:layout_constraintBottom_toBottomOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"

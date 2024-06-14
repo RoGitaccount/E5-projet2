@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class Acceuil : AppCompatActivity() {
+class Accueil : AppCompatActivity() {
 
     private lateinit var welcomeTextView: TextView
     private lateinit var logoutButton: ImageButton
@@ -39,14 +39,19 @@ class Acceuil : AppCompatActivity() {
         logoutButton.setOnClickListener {
             clearUserSession()
 
-            val intent = Intent(this@Acceuil, MainActivity::class.java)
+            val intent = Intent(this@Accueil, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
 
         if (savedInstanceState == null) {
+            val recipesFragment = RecipesFragment().apply {
+                arguments = Bundle().apply {
+                    putString("id_utilisateur", id_utilisateur)
+                }
+            }
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, RecipesFragment())
+                .replace(R.id.fragment_container, recipesFragment)
                 .commit()
         }
 
@@ -73,12 +78,13 @@ class Acceuil : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                //R.id.fav_page -> {
-                //  // Navigate to favorites page
-                //val intent = Intent(this, FavoritesActivity::class.java)
-                //startActivity(intent)
-                //true
-                //}
+                R.id.fav_page -> {
+                  // Navigate to favorites page
+                    val intent = Intent(this, FavoritesActivity::class.java)
+                    intent.putExtra("id_utilisateur", id_utilisateur)
+                    startActivity(intent)
+                    true
+                }
                 else -> false
             }
         }
@@ -91,4 +97,28 @@ class Acceuil : AppCompatActivity() {
         editor.clear()
         editor.apply()
     }
+
+    fun refreshRecipesList() {
+        val recipesFragment = RecipesFragment().apply {
+            arguments = Bundle().apply {
+                putString("id_utilisateur", id_utilisateur)
+            }
+        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, recipesFragment)
+            .commit()
+    }
+
+    fun refreshUserList() {
+        val usersFragment = UsersFragment().apply {
+            arguments = Bundle().apply {
+                putString("id_utilisateur", id_utilisateur)
+            }
+        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, usersFragment)
+            .commit()
+    }
+
 }
+

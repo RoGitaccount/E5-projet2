@@ -1,5 +1,6 @@
 package fr.ro.recipemanager
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,7 +16,9 @@ class UsersActivity : AppCompatActivity() {
     private lateinit var logoutButton: ImageButton
     private var prenom: String? = null
     private var id_utilisateur: String? = null
+    private lateinit var userAdapter: UserAdapter
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_acceuil)
@@ -53,7 +56,7 @@ class UsersActivity : AppCompatActivity() {
         navigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home_page -> {
-                    val intent = Intent(this, Acceuil::class.java)
+                    val intent = Intent(this, Accueil::class.java)
                     startActivity(intent)
                     true
                 }
@@ -64,12 +67,13 @@ class UsersActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                //R.id.fav_page -> {
-                  //  // Navigate to favorites page
-                    //val intent = Intent(this, FavoritesActivity::class.java)
-                    //startActivity(intent)
-                    //true
-                //}
+                R.id.fav_page -> {
+                    // Navigate to favorites page
+                    val intent = Intent(this, FavoritesActivity::class.java)
+                    intent.putExtra("id_utilisateur", id_utilisateur)
+                    startActivity(intent)
+                    true
+                }
                 else -> false
             }
         }
@@ -81,5 +85,12 @@ class UsersActivity : AppCompatActivity() {
         val editor = sharedPreferences.edit()
         editor.clear()
         editor.apply()
+    }
+
+    fun refreshUserList() {
+        val usersFragment = UsersFragment()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, usersFragment)
+            .commit()
     }
 }

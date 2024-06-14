@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import fr.ro.recipemanager.Acceuil
+import fr.ro.recipemanager.Accueil
 import fr.ro.recipemanager.R
 
-class AddRecipeFragment(private val context: Acceuil): Fragment(){
+class AddRecipeFragment(private val context: Accueil): Fragment(){
 
     private var uploadedImage:ImageView? = null
 

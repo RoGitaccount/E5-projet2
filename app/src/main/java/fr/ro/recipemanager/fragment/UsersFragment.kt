@@ -25,7 +25,7 @@ class UsersFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_user, container, false)
         recyclerView = view.findViewById(R.id.User_recycler_list)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        userAdapter = UserAdapter(userList)
+        userAdapter = UserAdapter(userList) { onUserDeleted() }
         recyclerView.adapter = userAdapter
         loadUsers()
         return view
@@ -35,15 +35,12 @@ class UsersFragment : Fragment() {
         val queue = Volley.newRequestQueue(context)
         val url = "http://192.168.56.1/api/actions/showUser.php"
 
-
-
-
-
         val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
                 try {
                     if (response.getBoolean("success")) {
                         val users = response.getJSONArray("utilisateurs")
+                        userList.clear() // Vider la liste avant d'ajouter de nouveaux éléments
                         for (i in 0 until users.length()) {
                             val user = users.getJSONObject(i)
                             userList.add(
@@ -67,5 +64,9 @@ class UsersFragment : Fragment() {
             }
         )
         queue.add(jsonObjectRequest)
+    }
+
+    private fun onUserDeleted() {
+        // Handle actions needed after a user is deleted, e.g., refresh the list or show a message
     }
 }

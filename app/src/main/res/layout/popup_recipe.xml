@@ -29,8 +29,8 @@
     <TextView
         android:id="@+id/popup_rcp_name"
         style="@style/TitleTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="70dp"
         android:layout_marginStart="24dp"
         android:text="@string/popup_rcp_name"
         app:layout_constraintBottom_toBottomOf="@+id/cardView2"
@@ -46,6 +46,8 @@
         android:src="@drawable/ic_close"
         app:layout_constraintBottom_toBottomOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/popup_rcp_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -152,11 +154,11 @@
         app:layout_constraintTop_toBottomOf="@+id/popup_rcp_time_cuisson" />
 
     <ImageView
-        android:id="@+id/edit_button"
+        android:id="@+id/delete_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="44dp"
-        android:src="@drawable/ic_edit"
+        android:layout_marginStart="40dp"
+        android:src="@drawable/ic_delete"
         app:layout_constraintBottom_toBottomOf="@+id/view_separation"
         app:layout_constraintStart_toEndOf="@+id/view_separation"
         app:layout_constraintTop_toTopOf="@+id/view_separation"
@@ -173,11 +175,11 @@
         app:layout_constraintTop_toBottomOf="@+id/popup_rcp_time_cuisson_title" />
 
     <ImageView
-        android:id="@+id/delete_button"
+        android:id="@+id/rcp_edit_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="44dp"
-        android:src="@drawable/ic_delete"
+        android:src="@drawable/ic_edit"
         app:layout_constraintBottom_toBottomOf="@+id/view_separation"
         app:layout_constraintEnd_toStartOf="@+id/view_separation"
         app:layout_constraintTop_toTopOf="@+id/view_separation"

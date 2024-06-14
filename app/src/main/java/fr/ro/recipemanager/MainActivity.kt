@@ -1,8 +1,8 @@
 package fr.ro.recipemanager
 
-import DatabaseManager
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -18,9 +19,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var PasswordEditText: EditText
     private lateinit var connectBtn: Button
     private lateinit var createAccountBtn: TextView
+    private lateinit var errorConnectAccountTextView: TextView
     private var email: String? = null
     private var mot_de_passe: String? = null
-    private var databaseManager: DatabaseManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         PasswordEditText = findViewById(R.id.PasswordEditText)
         connectBtn = findViewById(R.id.connectBtn)
         createAccountBtn = findViewById(R.id.createAccountBtn)
-        databaseManager = DatabaseManager(applicationContext)
+        errorConnectAccountTextView = findViewById(R.id.errorConnectAccountTextView)
 
         connectBtn.setOnClickListener {
             email = EmailEditText.text.toString()
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 val id_utilisateur = user.getString("id_utilisateur")
                 val prenom = user.getString("prenom")
 
-                val intent = Intent(this@MainActivity, Acceuil::class.java)
+                val intent = Intent(this@MainActivity, Accueil::class.java)
                 intent.putExtra("id_utilisateur", id_utilisateur)
                 intent.putExtra("email", email)
                 intent.putExtra("prenom", prenom)
@@ -60,11 +61,11 @@ class MainActivity : AppCompatActivity() {
                 finish()
             } else {
                 val error = response.getString("error")
-                Toast.makeText(this@MainActivity, error, Toast.LENGTH_SHORT).show()
+                showError(error)
             }
         } catch (e: JSONException) {
             e.printStackTrace()
-            Toast.makeText(this@MainActivity, e.toString(), Toast.LENGTH_LONG).show()
+            showError("Erreur lors du traitement de la réponse")
         }
     }
 
@@ -74,20 +75,32 @@ class MainActivity : AppCompatActivity() {
         params["email"] = email
         params["mot_de_passe"] = mot_de_passe
         val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.POST, url, (params as Map<*,*>?)?.let { JSONObject(it) },
+            Request.Method.POST, url, JSONObject(params as Map<*, *>?),
             { response ->
                 onApiResponse(response)
                 Toast.makeText(this@MainActivity, "Connexion réussie", Toast.LENGTH_SHORT).show()
             },
             { error ->
-                val errorMessage = error?.message ?: "Erreur inconnue lors de la connexion"
-                if (error.networkResponse?.statusCode == 401) {
-                    Toast.makeText(this@MainActivity, "Erreur d'authentification: $errorMessage", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this@MainActivity, "Erreur lors de la connexion: $errorMessage", Toast.LENGTH_SHORT).show()
+                val response = error.networkResponse
+                if (response != null && response.data != null) {
+                    val errorMessage = String(response.data)
+                    try {
+                        val errorJson = JSONObject(errorMessage)
+                        val errorMsg = errorJson.getString("error")
+                        showError(errorMsg)
+                    } catch (e: JSONException) {
+                        showError("Erreur inconnue lors de la connexion")
+                    }
                 }
             }
         )
-        databaseManager!!.queue.add(jsonObjectRequest)
+        // Initialisez la file de requêtes si nécessaire
+        val requestQueue = Volley.newRequestQueue(this)
+        requestQueue.add(jsonObjectRequest)
+    }
+
+    private fun showError(message: String) {
+        errorConnectAccountTextView.text = message
+        errorConnectAccountTextView.visibility = View.VISIBLE
     }
 }

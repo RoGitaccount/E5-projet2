@@ -1,15 +1,17 @@
 package fr.ro.recipemanager
 
-import DatabaseManager
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
+import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -21,12 +23,7 @@ class CreateAccountActivity : AppCompatActivity() {
     private lateinit var lastnameEditText: EditText
     private lateinit var createAccountBtn: Button
     private lateinit var alreadyHasAccountTextView: TextView
-    private var databaseManager: DatabaseManager? = null
-
-    private var email: String = ""
-    private var mot_de_passe: String = ""
-    private var nom: String = ""
-    private var prenom: String = ""
+    private lateinit var errorCreateAccountTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,71 +35,79 @@ class CreateAccountActivity : AppCompatActivity() {
         lastnameEditText = findViewById(R.id.createLastNameEditText)
         createAccountBtn = findViewById(R.id.createAccountBtn)
         alreadyHasAccountTextView = findViewById(R.id.alreadyHasAccountBtn)
+        errorCreateAccountTextView = findViewById(R.id.errorCreateAccountTextView)
 
-        // Initialisation du DatabaseManager
-        databaseManager = DatabaseManager(applicationContext)
+        createAccountBtn.setOnClickListener {
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
+            val nom = nameEditText.text.toString()
+            val prenom = lastnameEditText.text.toString()
 
-        // Ajoutez les écouteurs d'événements pour les boutons ici
-        createAccountBtn.setOnClickListener { view ->
-            email = emailEditText.text.toString()
-            mot_de_passe = passwordEditText.text.toString()
-            nom = nameEditText.text.toString()
-            prenom = lastnameEditText.text.toString()
-
-            createAccount()
+            createAccount(email, password, nom, prenom)
         }
 
-        // Redirection vers l'activité de connexion
-        alreadyHasAccountTextView.setOnClickListener { view ->
+        alreadyHasAccountTextView.setOnClickListener {
             val mainActivity = Intent(this, MainActivity::class.java)
             startActivity(mainActivity)
         }
+    }
+
+    private fun createAccount(email: String, password: String, nom: String, prenom: String) {
+        val url = "http://192.168.56.1/api/actions/createAccount.php"
+
+        val params = HashMap<String, String>()
+        params["email"] = email
+        params["mot_de_passe"] = password
+        params["nom"] = nom
+        params["prenom"] = prenom
+
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.POST, url, JSONObject(params as Map<*, *>?),
+            Response.Listener { response ->
+                onApiResponse(response)
+            },
+            Response.ErrorListener { error ->
+                val response = error.networkResponse
+                if (response != null && response.data != null) {
+                    val errorMessage = String(response.data)
+                    try {
+                        val errorJson = JSONObject(errorMessage)
+                        val errorMsg = errorJson.getString("error")
+                        showError(errorMsg)
+                    } catch (e: JSONException) {
+                        // Ignorer les erreurs de parsing
+                    }
+                }
+            }
+        )
+        // Initialisez la file de requêtes si nécessaire
+        val requestQueue = Volley.newRequestQueue(this)
+        requestQueue.add(jsonObjectRequest)
     }
 
     private fun onApiResponse(response: JSONObject) {
         try {
             val success = response.getBoolean("success")
             if (success) {
-                val id_utilisateur = response.getString("id_utilisateur")
-                val prenom = response.getString("prenom")
+                // Afficher le Toast
+                Toast.makeText(this, "Inscription réussie", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(this@CreateAccountActivity, Acceuil::class.java)
-                intent.putExtra("id_utilisateur", id_utilisateur)
-                intent.putExtra("email", email)
-                intent.putExtra("nom", nom)
-                intent.putExtra("prenom", prenom)
+                // Rediriger vers MainActivity
+                val intent = Intent(this@CreateAccountActivity, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             } else {
                 val error = response.getString("error")
-                Toast.makeText(this@CreateAccountActivity, error, Toast.LENGTH_SHORT).show()
+                showError(error)
             }
         } catch (e: JSONException) {
             e.printStackTrace()
-            Toast.makeText(this@CreateAccountActivity, e.toString(), Toast.LENGTH_LONG).show()
+            showError("Erreur lors du traitement de la réponse")
         }
     }
 
-    private fun createAccount() {
-        val url = "http://192.168.56.1/api/actions/createAccount.php"
-
-        val params = HashMap<String, String>()
-        params["email"] = email
-        params["mot_de_passe"] = mot_de_passe
-        params["nom"] = nom
-        params["prenom"] = prenom
-
-        val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.POST, url, JSONObject(params as Map<*, *>?),
-            { response ->
-                onApiResponse(response)
-                Toast.makeText(this@CreateAccountActivity, "Création du compte réussie", Toast.LENGTH_SHORT).show()
-            },
-            { error ->
-                val errorMessage = error?.message ?: "Erreur inconnue lors de la création du compte"
-                Toast.makeText(this@CreateAccountActivity, "Erreur lors de la création du compte: $errorMessage", Toast.LENGTH_SHORT).show()
-            }
-        )
-        databaseManager!!.queue.add(jsonObjectRequest)
+    private fun showError(message: String) {
+        errorCreateAccountTextView.text = message
+        errorCreateAccountTextView.visibility = View.VISIBLE
     }
 }
